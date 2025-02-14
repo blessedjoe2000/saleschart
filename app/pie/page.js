@@ -1,37 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { salesData } from "@/data/data";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 // Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default function CarSalesChart() {
-  const [selectedMonth, setSelectedMonth] = useState(salesData[0].month); // Default to the first month
+export default function PieChart() {
+  const [selectedMonth, setSelectedMonth] = useState(salesData[0].month); // Default to first month
 
   //Get Data for Selected Month
   const selectedMonthSales = salesData.find((d) => d.month === selectedMonth);
-  const chartData = selectedMonthSales
+  const pieChartData = selectedMonthSales
     ? {
         labels: ["Tesla", "Toyota", "Ford", "Mercedes"],
         datasets: [
@@ -50,19 +35,6 @@ export default function CarSalesChart() {
       }
     : null;
 
-  //Chart Options
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { position: "top" },
-    },
-    scales: {
-      x: { title: { display: true, text: "Car Brands" } },
-      y: { title: { display: true, text: "Cars Sold" } },
-    },
-  };
-
   return (
     <Card className="p-4 shadow-md bg-white">
       <CardHeader>
@@ -71,12 +43,12 @@ export default function CarSalesChart() {
             {selectedMonth} Sales Breakdown
           </CardTitle>
           <Button className="text-xl font-bold bg-blue-500 hover:bg-blue-600">
-            <Link href="/pie">View Pie Chart</Link>
+            <Link href="/">View Bar Chart</Link>
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="h-[400px]">
-        {chartData && <Bar data={chartData} options={options} />}
+      <CardContent className="h-[400px] flex justify-center">
+        {pieChartData && <Pie data={pieChartData} />}
       </CardContent>
       <div className="flex flex-wrap gap-2 p-4">
         {salesData.map((d) => (
